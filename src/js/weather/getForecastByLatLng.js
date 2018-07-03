@@ -6,10 +6,10 @@ export default function getForecastByLatLng(location) {
 	loadMap('map', location);
 	getForecastByRequest(location, query)
 		.then(data => {
-			console.log(data);
-
 			eventBus.trigger('currentWeather', data);
-			eventBus.trigger('historyWeather', data);
+		})
+		.catch(err => {
+			console.log(err);
 		})
 }
 
@@ -30,7 +30,7 @@ function getForecastByXHR(url) {
 				return;
 			}
 			if (xhr.status !== 200) {
-				reject(`Ошибка: ${xhr.status ? xhr.statusText : "Запрос не удался"}`);
+				reject(`Ошибка: ${xhr.status ? xhr.statusText : 'Прогноз погоды получить не удалось'}`);
 			} else {
 				resolve(JSON.parse(xhr.response));
 			}
@@ -41,8 +41,15 @@ function getForecastByXHR(url) {
 
 function getForecastByFetch(url) {
 	return fetch(`${url}`)
+		.then(req => {
+			if (req.status >= 200 && req.status < 300) {
+				return Promise.resolve(req);
+			} else {
+				return Promise.reject(new Error(req.statusText));
+			}
+		})
 		.then(req => req.json())
-		.catch( _ => {
-			alert('Запрос не удался');
+		.catch( err => {
+			return `'Прогноз погоды получить не удалось', ${err}`;
 		})
 }

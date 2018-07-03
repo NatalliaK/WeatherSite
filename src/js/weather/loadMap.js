@@ -1,20 +1,42 @@
+import {eventBus} from './../index.js';
+
 export default function loadMap(id, position) {
+
 	let lat = position.lat;
 	let lng = position.lng;
-	ymaps.ready(init);
 	var myMap;
 
-	function init(){
-		myMap = new ymaps.Map (id, {
+	if (document.querySelector('#map') && window.location.hash.match(/city/)) {
+		document.querySelector('#map').innerHTML = '';
+	}
+
+	if (!document.querySelector('#map').childNodes.length) {
+		ymaps.ready(init);
+	}
+
+	function init() {
+		//eventBus.on('setMapCenter', setCenter);
+
+		myMap = new ymaps.Map(id, {
 			center: [lat, lng],
 			zoom: 7,
 			controls: ['zoomControl']
 		});
-	}
-}
 
-function setCenter () {
-	myMap.setCenter([57.767265, 40.925358]);
+		myMap.events.add('actionend', getNewCenter);
+
+
+		function getNewCenter() {
+				let newCenter = myMap.getCenter();
+				var url = `center=${newCenter[0]},${newCenter[1]}`;
+				eventBus.trigger('changeUrl', url);
+		}
+
+		function getNewCenterCity ([lat, lng]) {
+			myMap.getCenter([lat, lng]);
+		}
+		//eventBus.on('getNewCenterCity', getNewCenterCity);
+	}
 }
 
 function setTypeAndPan () {
