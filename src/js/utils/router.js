@@ -26,8 +26,9 @@ export default class Router {
 				this.next = el;
 			} else if (
 				el.match instanceof RegExp &&
-				this.url.search(el.match) !== -1
+				decodeURI(this.url).search(el.match) !== -1
 			) {
+				this.url = decodeURI(this.url);
 				this.nextRoute = this.url.match(el.match);
 				this.nextRoute = this.nextRoute[0];
 				this.next = el;

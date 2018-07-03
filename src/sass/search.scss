@@ -1,0 +1,23 @@
+.search__wrap {
+	position:	relative;
+}
+
+.search__input {
+	padding: 5px 5px 5px 25px;
+
+	border: 1px solid grey;
+	border-radius: 4px;
+
+	&:hover,
+	&:focus {
+		outline: none;
+	}
+}
+
+.search__img {
+	position: absolute;
+	top: 7px;
+	left: 5px;
+
+	cursor: pointer;
+}
