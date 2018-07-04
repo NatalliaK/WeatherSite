@@ -1,5 +1,5 @@
 export default function getUserPosition() {
-  const URL_API_USER_POSITION = 'http://ip-api.com/json';
+  const URL_API_USER_POSITION = 'https://api.userinfo.io/userinfos';
   return fetch(`${URL_API_USER_POSITION}`)
     .then(response => {
       if (response.status >= 200 && response.status < 300) {
@@ -12,7 +12,7 @@ export default function getUserPosition() {
       return response.json();
     })
     .then(data => {
-      let url = `center=${data.lat},${data.lon}`;
+      let url = `center=${data.position.latitude},${data.position.longitude}`;
       return url;
     })
     .catch(err => {
